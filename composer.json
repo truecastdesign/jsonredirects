@@ -3,7 +3,7 @@
   "type" : "library",
   "description": "Json file based redirects with exact match and wildcard * matching for changing higher up paths with sub categories so the sub categories get redirected as well.",
   "keywords": ["json","php","redirect","301"],
-  "license": "GPL",
+  "license": "MIT",
 
   "authors": [
   {
