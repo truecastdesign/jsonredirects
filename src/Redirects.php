@@ -75,7 +75,7 @@ class Redirects
 		}
 
 		header("HTTP/1.1 $header"); 
-		header("Location: /$redirect");
+		header("Location: $redirect");
 		exit;
 	}
 }
