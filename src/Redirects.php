@@ -5,7 +5,7 @@ namespace Truecast;
  *
  * @package General
  * @author Daniel Baldwin
- * @version 1.0.0
+ * @version 1.0.1
  */
 class Redirects
 {
@@ -46,6 +46,11 @@ class Redirects
 			$redirect = $redirectList[$requestUri];
 		} else {
 			foreach ($redirectList as $key=>$value) {
+				# check whether an internal redirect has a forward slash at the front and if not, add it
+				if(substr($value, 0, 1) !== "/" && substr($value, 0, 7) !== "http://" && substr($value, 0, 8) !== "https://") {
+					$value = "/" . $value;
+				}
+				
 				$match = strstr($key, '*', true);
 				if ($match !== false) {
 					$strLen = strlen($match);
