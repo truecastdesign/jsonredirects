@@ -5,10 +5,20 @@ namespace Truecast;
  *
  * @package General
  * @author Daniel Baldwin
- * @version 1.0.0
+ * @version 2.0.0
  */
 class Redirects
 {
+	var $file;
+	
+	public function __construct($file)
+	{
+		if (!file_exists($file))
+			throw new \Exception("The file $file does not exist!");
+		
+		$this->file = $file;
+	}
+	
 	/**
 	* Perform a 301 redirect of the url if needed.
 	* json file should use keys for request uri and values for redirected uri
@@ -77,5 +87,71 @@ class Redirects
 		header("HTTP/1.1 $header"); 
 		header("Location: /$redirect");
 		exit;
+	}
+
+	/**
+	 * Add redirect to json file
+	 *
+	 * @param string $from
+	 * @param string $to
+	 * @return void
+	 */
+	public function add($from, $to)
+	{
+		if (empty($from))
+			throw new \Exception("From URL is empty!");
+
+		if (empty($to))
+			throw new \Exception("To URL is empty!");
+		
+		$jsonArray = json_decode(file_get_contents($this->file), true);
+
+		$from = $this->cleanUrl($from);
+		$to = $this->cleanUrl($to);
+
+		$jsonArray[$from] = $to;
+
+		file_put_contents($this->file, stripslashes(json_encode($jsonArray)));
+	}
+
+	/**
+	 * clean url
+	 *
+	 * @param string $url
+	 * @return string
+	 */
+	public function cleanUrl($url)
+	{
+		return ltrim(parse_url(trim($url), PHP_URL_PATH), '/');
+	}
+
+	/**
+	 * remove redirect from json file
+	 *
+	 * @param string $from
+	 * @return void
+	 */
+	public function remove($from)
+	{
+		if (empty($from))
+			throw new \Exception("From URL is empty!");
+		
+		$jsonArray = json_decode(file_get_contents($this->file), true);
+
+		$from = $this->cleanUrl($from);
+
+		unset($jsonArray[$from]);
+		
+		file_put_contents($this->file, stripslashes(json_encode($jsonArray)));
+	}
+
+	/**
+	 * Get array of redirects
+	 *
+	 * @return associative array ['from-url'=>'to-url']
+	 */
+	public function getRedirectsList()
+	{
+		return json_decode(file_get_contents($this->file), true);
 	}
 }

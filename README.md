@@ -26,6 +26,34 @@ Matches "path4/path5/path8/" redirects to "path4/path6/path8/" The path that mat
 *Third line:*
 Matches "path7/path9/path8/" redirects to "path7/path10/" The path that matches the * on the request is NOT moved over to the end of the redirect uri because there is no * on the redirect
 
+# Editing JSON file with PHP
+
+## Add redirect
+```php
+$Redirects = new App\Redirects(BP.'/config/redirects.json');
+$Redirects->add($App->request->post->fromUrl, $App->request->post->toUrl);
+```
+
+## Remove redirect
+```php
+$Redirects = new App\Redirects(BP.'/config/redirects.json');
+$Redirects->remove($App->request->delete->fromUrl);
+```
+
+## Get redirects list
+```php
+$Redirects = new App\Redirects(BP.'/config/redirects.json');
+$list = $Redirects->getRedirectsList();
+
+// array ['from-url'=>'to-url', 'from-url'=>'to-url']
+```
+
+## Clean URL
+```php
+$Redirects = new App\Redirects(BP.'/config/redirects.json');
+$cleanedURL = $Redirects->cleanUrl($url);
+```
+
 # Notes
 
 This code works well in a routes script at the top before other custom routes are checked.
